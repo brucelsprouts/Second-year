@@ -1,8 +1,8 @@
 
 /*This class represents the records that will be stored in the HashDictionary.  */
 public class Data {
-    private String config;
-    private int score;
+    private String config;  //String configuration of board.
+    private int score;      //Algorithm chosen score.
 
     /*A constructor which initializes a new Data object with the specified configuration and score. */
     public Data(String config, int score){
