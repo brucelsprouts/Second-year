@@ -6,8 +6,8 @@ public class Data {
 
     /*A constructor which initializes a new Data object with the specified configuration and score. */
     public Data(String config, int score){
-            this.config = config;
-            this.score = score;
+        this.config = config;
+        this.score = score;
     }   
     
     /*Returns the configuration stored in this Data object. */
