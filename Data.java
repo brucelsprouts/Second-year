@@ -1,4 +1,3 @@
-
 /*This class represents the records that will be stored in the HashDictionary.  */
 public class Data {
     private String config;  //String configuration of board.

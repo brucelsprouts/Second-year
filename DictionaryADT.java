@@ -1,8 +1,5 @@
 
 /* Description of these methods is given in the assignment */
-
-import javax.xml.crypto.Data;
-
 public interface DictionaryADT {
     
 	public int put (Data pair) throws DictionaryException;
