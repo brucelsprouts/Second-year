@@ -1,7 +1,86 @@
+import java.util.LinkedList;
 
 /*This class implements the Dictionary ADT using a hash table. */
-public class HashDictionary {
-    public HashDictionary(int size){
-        return ;
+public class HashDictionary implements DictionaryADT {
+    private LinkedList<Data>[] table;
+    private int size;
+    private int numRecords;
+
+    /* Constructor */
+    @SuppressWarnings("unchecked")
+    public HashDictionary(int size) {
+        this.size = size;
+        this.table = new LinkedList[size];
+        this.numRecords = 0;
+        for (int i = 0; i < size; i++) {
+            table[i] = new LinkedList<>();
+        }
     }
+    /* Polynomial hash function */
+    private int hashFunction(String config) {
+        int hash = 0;
+        int prime = 31; // A prime number used in the hash function
+        for (int i = 0; i < config.length(); i++) {
+            hash = (hash * prime + config.charAt(i)) % size;
+        }
+        return hash;
+    }
+
+    /* Adds record to the dictionary */
+    @Override
+    public int put(Data pair) throws DictionaryException {
+        int index = hashFunction(pair.getConfiguration());  // Get the index of the record
+        LinkedList<Data> bucket = table[index];             // Get the linked list at the index
+
+        for (int i = 0; i < bucket.size(); i++) {           // Check for duplicate key
+            Data data = bucket.get(i);
+            if (data.getConfiguration().equals(pair.getConfiguration())) {
+                throw new DictionaryException();
+            }
+        }
+
+        bucket.add(pair);   // Add the record to the linked list
+        numRecords++;       // Increment the number of records
+
+        return 1;           // Return 1 if the record is added successfully
+    }
+
+    @Override
+    public void remove(String config) throws DictionaryException {
+        int index = hashFunction(config);                   // Get the index of the record
+        LinkedList<Data> bucket = table[index];             // Get the linked list at the index
+        
+        for (int i = 0; i < bucket.size(); i++) {           // Remove the Data object from the linked list
+            Data data = bucket.get(i);
+            if (data.getConfiguration().equals(config)) {
+                bucket.remove(i);                           
+                numRecords--;
+                return;
+            }
+        }
+    
+        throw new DictionaryException();      // Throw an exception if the record is not found
+    }
+
+    @Override
+    public int get(String config) {
+        int index = hashFunction(config);                   // Get the index of the record
+        LinkedList<Data> bucket = table[index];             // Get the linked list at the index
+        
+        for (int i = 0; i < bucket.size(); i++) {           // Return the score if the record is found
+            Data data = bucket.get(i);                          
+            if (data.getConfiguration().equals(config)) {
+                return data.getScore();                     
+            }
+        }
+        
+        return -1;      // Return -1 if the record is not found
+    }
+
+    @Override
+    public int numRecords() {
+        return numRecords;
+    }
+
+    
 }
