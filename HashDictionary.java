@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-/*This class implements the Dictionary ADT using a hash table. */
+/* This class implements the Dictionary ADT using a hash table. */
 public class HashDictionary implements DictionaryADT {
     private LinkedList<Data>[] table;
     private int size;
@@ -16,6 +16,7 @@ public class HashDictionary implements DictionaryADT {
             table[i] = new LinkedList<>();
         }
     }
+
     /* Polynomial hash function */
     private int hashFunction(String config) {
         int hash = 0;
@@ -50,11 +51,11 @@ public class HashDictionary implements DictionaryADT {
         int index = hashFunction(config);                   // Get the index of the record
         LinkedList<Data> bucket = table[index];             // Get the linked list at the index
         
-        for (int i = 0; i < bucket.size(); i++) {           // Remove the Data object from the linked list
+        for (int i = 0; i < bucket.size(); i++) {           // Iterate through the linked list
             Data data = bucket.get(i);
             if (data.getConfiguration().equals(config)) {
-                bucket.remove(i);                           
-                numRecords--;
+                bucket.remove(i);                           // Remove the Data object from the linked list
+                numRecords--;                               // Decrement the number of records
                 return;
             }
         }
@@ -67,10 +68,10 @@ public class HashDictionary implements DictionaryADT {
         int index = hashFunction(config);                   // Get the index of the record
         LinkedList<Data> bucket = table[index];             // Get the linked list at the index
         
-        for (int i = 0; i < bucket.size(); i++) {           // Return the score if the record is found
+        for (int i = 0; i < bucket.size(); i++) {           // Iterate through the linked list
             Data data = bucket.get(i);                          
             if (data.getConfiguration().equals(config)) {
-                return data.getScore();                     
+                return data.getScore();                     // Return the score if the record is found
             }
         }
         
@@ -81,6 +82,4 @@ public class HashDictionary implements DictionaryADT {
     public int numRecords() {
         return numRecords;
     }
-
-    
 }
