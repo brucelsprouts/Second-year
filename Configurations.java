@@ -4,18 +4,18 @@ import javax.xml.crypto.Data;
 
 public class Configurations {
     private char[][] board;
-    private int boardsize;
+    private int boardSize;
     private int lengthToWin;
     private int max_levels;
 
     /* Constructor */
-    public Configurations (int boardsize, int lengthToWin, int max_levels) {
-        this.boardsize = boardsize;
+    public Configurations (int boardSize, int lengthToWin, int max_levels) {
+        this.boardSize = boardSize;
         this.lengthToWin = lengthToWin;
         this.max_levels = max_levels;
-        this.board = new char[boardsize][boardsize];
-        for (int i = 0; i < boardsize; i++) {           // Initialize the board with empty spaces
-            for (int j = 0; j < boardsize; j++) {
+        this.board = new char[boardSize][boardSize];
+        for (int i = 0; i < boardSize; i++) {           // Initialize the board with empty spaces
+            for (int j = 0; j < boardSize; j++) {
                 board[i][j] = ' ';
             }
         }
@@ -29,8 +29,8 @@ public class Configurations {
     /* Converts the board to a String, then checks if it exists in the hashTable and returns the associated score if found, otherwise returns -1 */
     public int repeatedConfiguration(HashDictionary configurations) {
         StringBuilder keyBuilder = new StringBuilder();
-        for (int i = 0; i < boardsize; i++) {        // Convert the board to a string
-            for (int j = 0; j < boardsize; j++) {
+        for (int i = 0; i < boardSize; i++) {        // Convert the board to a string
+            for (int j = 0; j < boardSize; j++) {
                 keyBuilder.append(board[i][j]);
             }
         }
@@ -42,8 +42,8 @@ public class Configurations {
     /* Represents content of board as String then inserts this String and score in hashDictionary */
     public void addConfiguration(HashDictionary configurations, int score) {
         StringBuilder keyBuilder = new StringBuilder();
-        for (int i = 0; i < boardsize; i++) {        // Convert the board to a string
-            for (int j = 0; j < boardsize; j++) {
+        for (int i = 0; i < boardSize; i++) {        // Convert the board to a string
+            for (int j = 0; j < boardSize; j++) {
                 keyBuilder.append(board[i][j]);
             }
         }
@@ -67,9 +67,9 @@ public class Configurations {
     */
     public boolean wins(char symbol) {
         // Check rows
-        for (int i = 0; i < boardsize; i++) {               // Iterate through the rows
+        for (int i = 0; i < boardSize; i++) {               // Iterate through the rows
             int count = 0;
-            for (int j = 0; j < boardsize; j++) {           // Iterate through the rows
+            for (int j = 0; j < boardSize; j++) {           // Iterate through the rows
                 if (board[i][j] == symbol) {
                     count++;
                     if (count == lengthToWin) return true;  // Return true if a winning sequence is found
@@ -80,9 +80,9 @@ public class Configurations {
         }
 
         // Check columns
-        for (int j = 0; j < boardsize; j++) {               // Iterate through the columns
+        for (int j = 0; j < boardSize; j++) {               // Iterate through the columns
             int count = 0;
-            for (int i = 0; i < boardsize; i++) {           // Iterate through the rows
+            for (int i = 0; i < boardSize; i++) {           // Iterate through the rows
                 if (board[i][j] == symbol) {
                     count++;
                     if (count == lengthToWin) return true;  // Return true if a winning sequence is found
@@ -93,8 +93,8 @@ public class Configurations {
         }
 
         // Check diagonals (top left to bottom right)
-        for (int i = 0; i <= boardsize - lengthToWin; i++) {        // Start from the top left corner
-            for (int j = 0; j <= boardsize - lengthToWin; j++) {    // Check diagonals from left to right
+        for (int i = 0; i <= boardSize - lengthToWin; i++) {        // Start from the top left corner
+            for (int j = 0; j <= boardSize - lengthToWin; j++) {    // Check diagonals from left to right
                 int count = 0;
                 for (int k = 0; k < lengthToWin; k++) {             // Check the diagonal
                     if (board[i + k][j + k] == symbol) {
@@ -108,8 +108,8 @@ public class Configurations {
         }
 
         // Check diagonals (bottom left to top right)
-        for (int i = lengthToWin - 1; i < boardsize; i++) {         // Start from the bottom left corner
-            for (int j = 0; j <= boardsize - lengthToWin; j++) {    // Check diagonals from left to right
+        for (int i = lengthToWin - 1; i < boardSize; i++) {         // Start from the bottom left corner
+            for (int j = 0; j <= boardSize - lengthToWin; j++) {    // Check diagonals from left to right
                 int count = 0;
                 for (int k = 0; k < lengthToWin; k++) {             // Check the diagonal
                     if (board[i - k][j + k] == symbol) {
@@ -127,8 +127,8 @@ public class Configurations {
 
     /*  Returns true if board has no empty positions left and no player has won the game. */
     public boolean isDraw() {
-        for (int i = 0; i < boardsize; i++) {       // Iterate through the board
-            for (int j = 0; j < boardsize; j++) { 
+        for (int i = 0; i < boardSize; i++) {       // Iterate through the board
+            for (int j = 0; j < boardSize; j++) { 
                 if (board[i][j] == ' ') {
                     return false;                   // Return false if there are empty positions
                 }
