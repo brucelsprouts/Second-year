@@ -2,16 +2,15 @@ import java.util.LinkedList;
 
 /* This class implements the Dictionary ADT using a hash table. */
 public class HashDictionary implements DictionaryADT {
-    private LinkedList<Data>[] table; // Array of linked lists to store Data objects
-    private int size;                 // Size of the hash table
-    private int numRecords;           // Number of records in the hash table
+    private LinkedList<Data>[] table;   // Array of linked lists to store Data objects
+    private int size;                   // Size of the hash table
+    private int numRecords;             // Number of records in the hash table
 
     /* Constructor */
     @SuppressWarnings("unchecked")
     public HashDictionary(int size) {
         this.size = size;
-        this.table = new LinkedList[size];
-        this.numRecords = 0;
+        table = (LinkedList<Data>[]) new LinkedList[size]; // Suppress unchecked warning
         for (int i = 0; i < size; i++) {
             table[i] = new LinkedList<>();
         }
@@ -20,7 +19,7 @@ public class HashDictionary implements DictionaryADT {
     /* Polynomial hash function */
     private int hashFunction(String config) {
         int hash = 0;
-        int prime = 31; // A prime number used in the hash function
+        int prime = 101;
         for (int i = 0; i < config.length(); i++) {
             hash = (hash * prime + config.charAt(i)) % size;
         }

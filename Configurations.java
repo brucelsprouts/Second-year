@@ -1,7 +1,4 @@
 /* This class implements all the methods needed by algorithm computerPlay */
-
-import javax.xml.crypto.Data;
-
 public class Configurations {
     private char[][] board;
     private int boardSize;
@@ -35,7 +32,10 @@ public class Configurations {
             }
         }
         String key = keyBuilder.toString();         // Convert the StringBuilder to a String
-        return configurations.get(key);             // Get the score associated with the key
+        int score = configurations.get(key);        // Get the score associated with the key
+        if (score != -1) {
+            return score;                           // Return the score if found
+        }
         return -1;                                  // Return -1 if the key is not found
     }
 
@@ -47,8 +47,8 @@ public class Configurations {
                 keyBuilder.append(board[i][j]);
             }
         }
-        String key = keyBuilder.toString();         // Convert the StringBuilder to a String
-        Data data = new Data(key, score);           // Create a new Data object with the key and score
+        String config = keyBuilder.toString();         // Convert the StringBuilder to a String
+        Data data = new Data(config, score);           // Create a new Data object with the key and score
         configurations.put(data);                   // Add the Data object to the hashDictionary
     }
 
