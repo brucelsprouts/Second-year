@@ -2,9 +2,9 @@ import java.util.LinkedList;
 
 /* This class implements the Dictionary ADT using a hash table. */
 public class HashDictionary implements DictionaryADT {
-    private LinkedList<Data>[] table;
-    private int size;
-    private int numRecords;
+    private LinkedList<Data>[] table; // Array of linked lists to store Data objects
+    private int size;                 // Size of the hash table
+    private int numRecords;           // Number of records in the hash table
 
     /* Constructor */
     @SuppressWarnings("unchecked")
@@ -46,6 +46,7 @@ public class HashDictionary implements DictionaryADT {
         return 1;           // Return 1 if the record is added successfully
     }
 
+    /* Removes record from the dictionary */
     @Override
     public void remove(String config) throws DictionaryException {
         int index = hashFunction(config);                   // Get the index of the record
@@ -63,6 +64,7 @@ public class HashDictionary implements DictionaryADT {
         throw new DictionaryException();      // Throw an exception if the record is not found
     }
 
+    /* Returns the score stored in the record of the dictionary */
     @Override
     public int get(String config) {
         int index = hashFunction(config);                   // Get the index of the record
@@ -78,6 +80,7 @@ public class HashDictionary implements DictionaryADT {
         return -1;      // Return -1 if the record is not found
     }
 
+    /* Returns the number of Data objects stored in the dictionary */
     @Override
     public int numRecords() {
         return numRecords;
