@@ -19,7 +19,7 @@ public class HashDictionary implements DictionaryADT {
     /* Polynomial hash function */
     private int hashFunction(String config) {
         int hash = 0;
-        int prime = 101;
+        int prime = 31;
         for (int i = 0; i < config.length(); i++) {
             hash = (hash * prime + config.charAt(i)) % size;
         }
