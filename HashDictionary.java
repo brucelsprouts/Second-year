@@ -10,8 +10,9 @@ public class HashDictionary implements DictionaryADT {
     @SuppressWarnings("unchecked")
     public HashDictionary(int size) {
         this.size = size;
-        table = (LinkedList<Data>[]) new LinkedList[size]; // Suppress unchecked warning
-        for (int i = 0; i < size; i++) {
+        this.table = new LinkedList[size];
+        this.numRecords = 0;
+            for (int i = 0; i < size; i++) {
             table[i] = new LinkedList<>();
         }
     }
@@ -21,9 +22,9 @@ public class HashDictionary implements DictionaryADT {
         int hash = 0;
         int prime = 31;
         for (int i = 0; i < config.length(); i++) {
-            hash = (hash * prime + config.charAt(i)) % size;
+            hash = hash * prime + config.charAt(i);
         }
-        return hash;
+        return Math.abs(hash) % size;
     }
 
     /* Adds record to the dictionary */
