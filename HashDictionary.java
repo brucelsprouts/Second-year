@@ -32,18 +32,23 @@ public class HashDictionary implements DictionaryADT {
     public int put(Data pair) throws DictionaryException {
         int index = hashFunction(pair.getConfiguration());  // Get the index of the record
         LinkedList<Data> bucket = table[index];             // Get the linked list at the index
-
+    
         for (int i = 0; i < bucket.size(); i++) {           // Check for duplicate key
             Data data = bucket.get(i);
             if (data.getConfiguration().equals(pair.getConfiguration())) {
                 throw new DictionaryException();
             }
         }
-
-        bucket.add(pair);   // Add the record to the linked list
-        numRecords++;       // Increment the number of records
-
-        return 1;           // Return 1 if the record is added successfully
+    
+        boolean isCollision = !bucket.isEmpty();    // Check if there is a collision
+        bucket.add(pair);                           // Add the record to the linked list
+        numRecords++;                               // Increment the number of records
+    
+        if (isCollision) {
+            return 1;  // Return 1 if there was a collision
+        } else {
+            return 0;  // Return 0 if there was no collision
+        }
     }
 
     /* Removes record from the dictionary */
