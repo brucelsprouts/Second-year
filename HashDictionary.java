@@ -18,15 +18,31 @@ public class HashDictionary implements DictionaryADT {
     }
 
     /* Polynomial hash function */
-    private int hashFunction(String config) {
+    private int doubleHash(String config) {
         int hash = 0;
         int prime = 31;
         for (int i = 0; i < config.length(); i++) {
             hash = hash * prime + config.charAt(i);
         }
-        return Math.abs(hash) % size;
+        return Math.abs(hash) % size; // Primary hash value
     }
-
+    
+    private int secondaryHashFunction(String config) {
+        int hash = 0;
+        int prime = 37; // Use a different prime number for the secondary hash
+        for (int i = 0; i < config.length(); i++) {
+            hash = hash * prime + config.charAt(i);
+        }
+        return 1 + (Math.abs(hash) % (size - 1)); // Ensure step size is non-zero
+    }
+    
+    // Example of how to use the hash functions
+    public int hashFunction(String config) {
+        int primaryHash = doubleHash(config);
+        int stepSize = secondaryHashFunction(config);
+        return (primaryHash * stepSize) % size;
+    }
+    
     /* Adds record to the dictionary */
     @Override
     public int put(Data pair) throws DictionaryException {
