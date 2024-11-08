@@ -1,19 +1,20 @@
+// Key of the data items stored in the internal nodes.
 public class Key {
-    private String label;
-    private int type;
+    private String label;   // Label of the key.
+    private int type;       // Type of the key.
 
-    // Constructor
+    // Constructor which initializes a new Key object.
     public Key(String theLabel, int theType) {
         label = theLabel.toLowerCase();
         type = theType;
     }
     
-    // Returns the String stored in instance variable label
+    // Returns the String stored in instance variable label.
     public String getLabel() {
         return label;
     }
 
-    // Returns the value of instance variable type
+    // Returns the value of instance variable type.
     public int getType() {
         return type;
     }
