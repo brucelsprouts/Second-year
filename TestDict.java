@@ -1,178 +1,264 @@
+import java.io.*;
 
 public class TestDict {
 
-	  /*
-	  ** Test program for the Dictionary class.
-	  */
+    public static void main(String[] args) {
+	final int TEXT = 2;
+	BSTDictionary dictionary = new BSTDictionary();
+	Record rec;
+	Key key;
 
-	  // **************************************
-	  public static void main(String[] args) {
-	  // **************************************
-	    HashDictionary dict = new HashDictionary(13441);
-	    boolean[] test = new boolean[11];
-	    int i,j;
+	String words[] = {"homework", "course", "class", "computer", "four"};
+	String definitions[] = {"Very enjoyable work that students need to complete outside the classroom.",
+				"A series of talks or lessons. For example, CS210.",
+				"A set of students taught together,",
+				"An electronic machine frequently used by Computer Science students.",
+				"One more than three"};
+	Key[] keys = new Key[5];
+	Record[] records = new Record[5];
+	
+	boolean alltests = true;
+	int test = -1;
+	if (args.length > 0) {
+		test = Integer.parseInt(args[0]);
+		alltests = false;
+	}
+	
+	for (int i = 0; i < 5; ++i) {
+		keys[i] = new Key(words[i],TEXT);
+		records[i] = new Record(keys[i],definitions[i]);
+	}
 
-	    if (args.length == 0) 
-			for (i = 0; i < 11; ++i) test[i] = true;
-	    else {
-			if (args[0].equals("help")) {
-				System.out.println("Usage: java TestDict, or java TestDict n1 n2 n3 ... ");
-				System.out.println("ni have value 1 - 10, only those tests will be run");
-				System.exit(0);
-	        }
+	// Insert one word and then find it
+	if (alltests || test == 1 || test == 3 || test == 6 || test == 7 || test == 8 || test == 9)
+	try {
+	    dictionary.put(records[0]);
+	    rec = dictionary.get(keys[0]);
+	    if ((rec.getDataItem()).compareTo(definitions[0]) == 0)
+			System.out.println("Test 1 passed");
+	    else System.out.println("Test 1 failed");
+	}
+	catch(Exception e) {
+	    System.out.println("Test 1 failed");
+	}
 
-			for (i = 0; i < 11; ++i) test[i] = false;
-			for (i = 0; i < args.length; ++i) {
-				j = Integer.parseInt(args[i]);
-				if (j >= 1 && j <= 10) test[j] = true;
-			}
-	    }
+	// Try to find an inexistent word
+	if (alltests || test == 2)
+	try {
+	    rec = dictionary.get(keys[1]);
+	    if (rec == null) System.out.println("Test 2 passed");
+	    else System.out.println("Test 2 failed");
+	}
+	catch(Exception e) {
+	    System.out.println("Test 2 failed");
+	}
 
-	    // Test 1: insert several data items in the dictionary.
-	    // Should not throw an exception.
+	// Try to insert the same word again
+	if (alltests || test == 3)
+	try {
+	    dictionary.put(records[0]);
+	    System.out.println("Test 3 failed");
+	}
+	catch(DictionaryException e) {
+	    System.out.println("Test 3 passed");
+	}
+	catch (Exception e) {
+	    System.out.println("Test 3 failed");
+	}
 
-	    if (test[1] || test[2] || test[3] || test[4] || test[5] || test[6])
-			try {
-				dict.put(new Data("answer", 42));
-				dict.put(new Data("record2",42));
-				dict.put(new Data("record3",40));
-				dict.put(new Data("2record",42));
-				if (test[1]) System.out.println("   Test 1 succeeded");
-			} catch (DictionaryException e) {
-				if (test[1]) System.out.println("***Test 1 failed");
-			}
+	// Insert and remove a word
+	if (alltests || test == 4)
+	try {
+	    dictionary.put(records[1]);
+	    dictionary.remove(keys[1]);
+	    rec = dictionary.get(keys[1]);
+	    if (rec == null) System.out.println("Test 4 passed");
+	    else System.out.println("Test 4 failed");
+	}
+	catch(DictionaryException e) {
+	    System.out.println("Test 4 failed");
+	}
 
-	    // Test 2: try to insert another data item with a key already in the dictionary.
-	    // Should throw an exception.
-	    if (test[2] || test[3] || test[6])
-			try {
-				dict.put(new Data("answer", 56));
-				if (test[2]) System.out.println("***Test 2 failed");
-			} catch (DictionaryException e) {
-				if (test[2]) System.out.println("   Test 2 succeeded");
-			}
+	// Remove a word not in the dictionary
+	if (alltests || test == 5)
+	try {
+	    dictionary.remove(keys[3]);
+	    System.out.println("Test 5 failed");
+	}
+	catch(DictionaryException e) {
+	    System.out.println("Test 5 passed");
+	}
+	catch (Exception e) {
+	    System.out.println("Test 5 failed");
+	}
 
-	    // Test 3: find a key in the table.
-		boolean passed = true;
-	    if (test[3]) 
-	    	try {
-		    if (dict.get("answer") == -1) passed = false;
-	 	    if (dict.get("record2") == -1) passed = false;
-			if (dict.get("record3") == -1) passed = false; 
-			if (dict.get("2record") == -1) passed = false;
-			if (!passed)
-				System.out.println("***Test 3 failed");
-			else System.out.println("   Test 3 succeeded");
-		} catch (Exception e) {
-			System.out.println("***Test 3 failed");
+	// Insert 5 words in the dictionary and test the successor method
+	if (alltests || test == 6 || test == 7 || test == 8 || test == 9)
+	try {
+	    dictionary.remove(keys[0]);
+	    dictionary.put(records[1]);
+	    dictionary.put(records[0]);
+	    for (int i = 2; i < 5; ++i)
+			dictionary.put(records[i]);
+
+	    rec = dictionary.successor(keys[3]);
+	    if ((rec.getKey().getLabel()).compareTo(words[1]) == 0)
+			System.out.println("Test 6 passed");
+	    else System.out.println("Test 6 failed");
+	}
+	catch (Exception e) {
+	    System.out.println("Test 6 failed");
+	}
+
+	// Test the successor method
+	if (alltests || test == 7)
+	try {
+	    rec = dictionary.successor(keys[2]);
+	    if ((rec.getKey().getLabel()).compareTo(words[3]) == 0)
+			System.out.println("Test 7 passed");
+	    else System.out.println("Test 7 failed");
+	}
+	catch (Exception e) {
+	    System.out.println("Test 7 failed");
+	}
+
+	//Test the predecessor method
+	if (alltests || test == 8)
+	try {
+	    rec = dictionary.predecessor(keys[0]);
+	    if ((rec.getKey().getLabel()).compareTo(words[4]) == 0)
+			System.out.println("Test 8 passed");
+	    else System.out.println("Test 8 failed");
+	}
+	catch (Exception e) {
+	    System.out.println("Test 8 failed");
+	}
+
+	// Test the predecessor method
+	if (alltests || test == 9)
+	try {
+	    rec = dictionary.predecessor(keys[4]);
+	    if ((rec.getKey().getLabel()).compareTo(words[1]) == 0)
+			System.out.println("Test 9 passed");
+	    else System.out.println("Test 9 failed");
+	}
+	catch (Exception e) {
+	    System.out.println("Test 9 failed");
+	}
+
+        // Create a new empty dictionary
+
+	dictionary = new BSTDictionary();
+
+	try {
+
+	    // Insert a large number of words in the dictionary
+	    BufferedReader in = new BufferedReader(new FileReader("large.txt"));
+	    String word = in.readLine();
+	    String definition;
+	    boolean test10 = true;
+
+if (alltests || test >= 10)
+	    try {
+		while (word != null) {
+		    try {
+				definition = in.readLine();
+				dictionary.put(new Record(new Key(word,TEXT),definition));
+				word = in.readLine();
+		    }
+		    catch (Exception e) {
+			test10 = false;
+		    }
 		}
 
-	    // Test 4: look for an inexistent key
-
-	    passed = true;
-	    if (test[4]) 
-	    	try {
-			if (dict.get("chicken") != -1) passed = false;
-			if (dict.get("2") != -1) passed = false;
-			if (dict.get("record") != -1) passed = false;
-			if (!passed) System.out.println("***Test 4 failed");
-			else System.out.println("   Test 4 succeeded");
-	    	} catch (Exception e) {
-	    		System.out.println("***Test 4 failed");
-	    	}
-
-	    // Test 5: try to delete a nonexistent entry.
-	    // Should throw an exception.
-	    if (test[5])
-			try {
-				dict.remove("chicken");
-				dict.remove("record2");
-				System.out.println("***Test 5 failed");
-			} catch (DictionaryException e) {
-				System.out.println("   Test 5 succeeded");
-			}
-
-	    // Test 6: delete actual entries.
-	    // Should not throw an exception.
-		passed = true;
-	    if (test[6])
-			try {
-				dict.remove("answer");
-				dict.remove("record2");
-				if (dict.get("answer") != -1) passed = false;
-				if (dict.get("record2") != -1) passed = false;
-				if (passed) System.out.println("   Test 6 succeeded");
-				else System.out.println("***Test 6 failed");
-			} catch (DictionaryException e) {
-				System.out.println("***Test 6 failed");
-			}
-
-	    int collisions = 0;
-	    String s;
-
-	    // Test 7: insert 10000 different records into the Dictionary
-	    if (test[7] || test[8] || test[9] || test[10])
-			try {
-				for (i = 0; i < 10000; ++i) {
-					s = Integer.toString(i);
-					for (j = 0; j < 5; ++j) s += s;
-					collisions += dict.put(new Data(s,i));
-				}
-				if (test[7]) System.out.println("   Test 7 succeeded");
-			} catch (DictionaryException e) {
-				if (test[7]) System.out.println("***Test 7 failed");
-			}
-
-
-	    // Test 8: check that all above records are in the Dictionary
-	    passed = true;
-	    if (test[8]) {
-			for (i = 0; i < 10000; ++i) {
-				s = Integer.toString(i);
-				for (j = 0; j < 5; ++j) s += s;
-				if (dict.get(s) == -1) {
-					System.out.println("***Test 8 failed");
-					passed = false;
-					break;
-				}
-			}
-			if (passed) System.out.println("   Test 8 succeeded");
+		if (test10) {
+		    // Now, try to find the word "practic"
+		    rec = dictionary.get(new Key("practic",TEXT));
+		    if ((rec.getDataItem()).indexOf("Artful; deceitful; skillful.") == -1)
+				System.out.println("Test 10 failed");
+		    else System.out.println("Test 10 passed");
+		}
+		else System.out.println("Test 10 failed");
+	    }
+	    catch (Exception e) {
+			System.out.println("Test 10 failed");
 	    }
 
-	    // Test 9: Remove the first 1000 data items and verify that the rest
-	    // are in the dictionary 
-	    passed = true;
-	    if (test[9])
-			try {
-				for (i = 0; i < 1000; ++i) {
-					s = Integer.toString(i);
-					for (j = 0; j < 5; ++j) s += s;
-					dict.remove(s);
-				}
+if (alltests || test == 11)
+	    // Try to find a word that is not in the dictionary
+	    try {
+			rec = dictionary.get(new Key("schnell",TEXT));
+			if (rec != null) System.out.println("Test 11 failed");
+			else System.out.println("Test 11 passed");
+	    }
+	    catch (Exception e) {
+			System.out.println("Test 11 failed");
+	    }
 
-				for (i = 1000; i < 10000; ++i) {
-					s = Integer.toString(i);
-					for (j = 0; j < 5; ++j) s += s;
-						if (dict.get(s) == -1) {
-							System.out.println("***Test 9 failed");
-							passed = false;
-							break;
-						}
-				}
-				if (passed) System.out.println("   Test 9 succeeded");
-			}	
-			catch (DictionaryException e) {
-				System.out.println("***Test 9 failed");
-			}
+if (alltests || test == 12)
+	    // Test the remove method
+	    try {
+			dictionary.remove(new Key("practic",TEXT));
+			rec = dictionary.get(new Key("practic",TEXT));
+			if (rec == null) System.out.println("Test 12 passed");
+			else System.out.println("Test 12 failed");
+	    }
+	    catch (Exception e) {
+			System.out.println("Test 12 failed");
+	    }
+	    
+	    if (alltests || test == 13)
+	    // Try to insert a word that is already in the dictionary
+	    try {
+			dictionary.put(new Record(new Key("pool",TEXT),"Body of water"));
+			System.out.println("Test 13 failed");
+	    }
+	    catch(DictionaryException e) {
+			System.out.println("Test 13 passed");
+	    }
+	    catch (Exception e) {
+		System.out.println("Test 13 failed");
+	    }
 
-	    //Test 10: Number of collisions
-	    if (test[10])
-			if (collisions >= 2800) {
-				System.out.println("***Test 10 failed");
-				System.out.println("Too many collisions: "+collisions);
-			}
-			else  System.out.println("   Test 10 succeeded");
-					System.out.println("Too many collisions: "+collisions);
+if (alltests || test == 14)
+	    // Test the predecessor method
+	    try {
+			rec = dictionary.predecessor(new Key("pony",TEXT));
+			if ((rec.getKey().getLabel()).compareTo("ponvolant") == 0) 
+				System.out.println("Test 14 passed");
+			else System.out.println("Test 14 failed");
+	    }
+	    catch (Exception e) {
+			System.out.println("Test 13 failed");
+	    }
 
-	  }
+if (alltests || test == 15)
+	    // Test the successor method
+	    try {
+			rec = dictionary.successor(new Key("reel",TEXT));
+			if ((rec.getKey().getLabel()).compareTo("reem") == 0)
+				System.out.println("Test 15 passed");
+			else System.out.println("Test 15 failed");
+	    }
+	    catch (Exception e) {
+			System.out.println("Test 15 failed");
+	    }
+
+if (alltests || test == 16)
+	    // Test removing a word and the using successor
+	    try {
+			dictionary.remove(new Key("langate",TEXT));
+			rec = dictionary.successor(new Key("land",TEXT));
+			if ((rec.getKey().getLabel()).compareTo("laniary") == 0)
+				System.out.println("Test 16 passed");
+			else System.out.println("Test 16 failed");
+	    }
+	    catch (Exception e) {
+			System.out.println("Test 16 failed");
+	    }
 	}
+	catch (IOException e) {
+	    System.out.println("Cannot open file: large.txt");
+	}
+    }
+}

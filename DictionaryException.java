@@ -1,9 +1,5 @@
-
-
-public class DictionaryException extends RuntimeException 
-{
-	public DictionaryException()
-	{
-		super ("Dictionary Error");
-	}
+public class DictionaryException extends Exception {
+  public DictionaryException(String mssg) {
+    super(mssg);
+  }
 }
