@@ -39,7 +39,7 @@ public class TestDict {
 	    else System.out.println("Test 1 failed");
 	}
 	catch(Exception e) {
-	    System.out.println("Test 1 failed");
+	    System.out.println(e);
 	}
 
 	// Try to find an inexistent word
@@ -76,7 +76,7 @@ public class TestDict {
 	    else System.out.println("Test 4 failed");
 	}
 	catch(DictionaryException e) {
-	    System.out.println("Test 4 failed");
+	    System.out.println(e);
 	}
 
 	// Remove a word not in the dictionary

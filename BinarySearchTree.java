@@ -9,12 +9,12 @@ public class BinarySearchTree {
 
     // Returns the root node of this binary search tree.
     public BSTNode getRoot() {
-        return this.root;
+        return root;
     }
 
     // Returns node storing the key; returns null if the key is not stored in tree with root r.
     public BSTNode get(BSTNode r, Key k) {
-        if (r == null || r.isLeaf()) {
+        if (r == null || r.getRecord() == null) {
             return null;
         }
         Key nodeKey = r.getRecord().getKey();
@@ -37,7 +37,7 @@ public class BinarySearchTree {
             Key newKey = d.getKey();
 
             if (nodeKey.compareTo(newKey) == 0) {       // If the key is already in the tree
-                throw new DictionaryException();
+                throw new DictionaryException("Record with the same key already exists.");
             } else if (newKey.compareTo(nodeKey) < 0) { // Insert into the left subtree
                 if (r.getLeftChild() == null) {
                     BSTNode newNode = new BSTNode(d);
@@ -63,7 +63,7 @@ public class BinarySearchTree {
         // Find the node to be removed
         BSTNode nodeToRemove = findNode(r, k);
         if (nodeToRemove == null) {
-            throw new DictionaryException();
+            throw new DictionaryException("Record with the given key does not exist.");
         }
 
         // Node to be removed has no children.
@@ -173,7 +173,7 @@ public class BinarySearchTree {
     }
 
     // Returns the node with the smallest key in tree with root r.
-    private BSTNode smallest(BSTNode r) {
+    public BSTNode smallest(BSTNode r) {
         while (r.getLeftChild() != null) {
             r = r.getLeftChild();
         }

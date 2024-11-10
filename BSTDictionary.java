@@ -12,7 +12,11 @@ public class BSTDictionary implements BSTDictionaryADT {
     @Override
     public Record get(Key k) {
         BSTNode node = bst.get(bst.getRoot(), k);
-        return (node != null) ? node.getRecord() : null;
+        if (node != null) {
+            return node.getRecord();
+        } else {
+            return null;
+        }    
     }
 
     /* Inserts the Record d into the ordered dictionary. It throws a DictionaryException 
@@ -22,7 +26,7 @@ public class BSTDictionary implements BSTDictionaryADT {
         try {
             bst.insert(bst.getRoot(), d);
         } catch (DictionaryException e) {
-            throw new DictionaryException();
+            throw new DictionaryException("Record with the same key already exists.");
         }
     }
 
@@ -33,7 +37,7 @@ public class BSTDictionary implements BSTDictionaryADT {
         try {
             bst.remove(bst.getRoot(), k);
         } catch (DictionaryException e) {
-            throw new DictionaryException();
+            throw new DictionaryException("Record with the given key does not exist.");
         }
     }
 
@@ -43,7 +47,11 @@ public class BSTDictionary implements BSTDictionaryADT {
     @Override
     public Record successor(Key k) {
         BSTNode node = bst.successor(bst.getRoot(), k);
-        return (node != null) ? node.getRecord() : null;
+        if (node != null) {
+            return node.getRecord();
+        } else {
+            return null;
+        }    
     }
 
     /* Returns the predecessor of k (the Record from the ordered dictionary 
@@ -52,7 +60,11 @@ public class BSTDictionary implements BSTDictionaryADT {
     @Override
     public Record predecessor(Key k) {
         BSTNode node = bst.predecessor(bst.getRoot(), k);
-        return (node != null) ? node.getRecord() : null;
+        if (node != null) {
+            return node.getRecord();
+        } else {
+            return null;
+        }    
     }
 
     /* Returns the Record with smallest key in the ordered dictionary. 
@@ -60,7 +72,11 @@ public class BSTDictionary implements BSTDictionaryADT {
     @Override
     public Record smallest() {
         BSTNode node = bst.smallest(bst.getRoot());
-        return (node != null) ? node.getRecord() : null;
+        if (node != null) {
+            return node.getRecord();
+        } else {
+            return null;
+        }    
     }
 
     /* Returns the Record with largest key in the ordered dictionary. 
@@ -68,6 +84,10 @@ public class BSTDictionary implements BSTDictionaryADT {
     @Override
     public Record largest() {
         BSTNode node = bst.largest(bst.getRoot());
-        return (node != null) ? node.getRecord() : null;
+        if (node != null) {
+            return node.getRecord();
+        } else {
+            return null;
+        }    
     }
 }
