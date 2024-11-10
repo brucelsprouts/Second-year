@@ -20,7 +20,6 @@ public class Interface {
 
         BSTDictionary dictionary = new BSTDictionary();
 
-        // Read input file and populate the dictionary
         while (fileScanner.hasNextLine()) {
             String label = fileScanner.nextLine().toLowerCase();
             if (fileScanner.hasNextLine()) {
@@ -30,18 +29,16 @@ public class Interface {
                     try {
                         dictionary.put(record);
                     } catch (DictionaryException e) {
-                        System.out.println("Error adding record: " + e.getMessage());
+                        System.out.println("A record with the given key (" + label + "," + determineType(typeAndData) + ") is already in the ordered dictionary.");
                     }
                 }
             }
         }
         fileScanner.close();
 
-        // Initialize StringReader to handle commands
         StringReader keyboard = new StringReader();
         String line;
 
-        // Read and process user commands
         while (true) {
             line = keyboard.read("Enter next command: ");
             String[] parts = line.trim().split(" ", 2);
@@ -88,7 +85,6 @@ public class Interface {
                     handleLast(dictionary);
                     break;
                 case "exit":
-                    System.out.println("Exiting the program.");
                     return;
                 default:
                     System.out.println("Invalid command.");
@@ -99,7 +95,7 @@ public class Interface {
     private static Record createRecord(String label, String typeAndData) {
         int type = determineType(typeAndData);
         if (type != -1) {
-            return new Record(new Key(label, type), typeAndData);
+            return new Record(new Key(label, type), typeAndData.substring(1));
         }
         return null;
     }
@@ -112,7 +108,7 @@ public class Interface {
         if (typeAndData.endsWith(".gif")) return 7;
         if (typeAndData.endsWith(".jpg")) return 6;
         if (typeAndData.endsWith(".html")) return 8;
-        return 1; // Default type (definition)
+        return 1;
     }
 
     private static void handleDefine(String[] parts, BSTDictionary dictionary) {
@@ -121,11 +117,11 @@ public class Interface {
             return;
         }
         String label = parts[1].toLowerCase();
-        Record record = dictionary.get(new Key(label, 1)); // type 1 for definition
+        Record record = dictionary.get(new Key(label, 1));
         if (record != null) {
             System.out.println(record.getDataItem());
         } else {
-            System.out.println("The word " + label + " is not in the ordered dictionary");
+            System.out.println("The word " + label + " is not in the dictionary.");
         }
     }
 
@@ -135,11 +131,11 @@ public class Interface {
             return;
         }
         String label = parts[1].toLowerCase();
-        Record record = dictionary.get(new Key(label, 2)); // type 2 for translation
+        Record record = dictionary.get(new Key(label, 2));
         if (record != null) {
             System.out.println(record.getDataItem());
         } else {
-            System.out.println("There is no definition for the word " + label);
+            System.out.println("There is no definition for the word " + label + ".");
         }
     }
 
@@ -149,11 +145,11 @@ public class Interface {
             return;
         }
         String label = parts[1].toLowerCase();
-        Record record = dictionary.get(new Key(label, 3)); // type 3 for sound
+        Record record = dictionary.get(new Key(label, 3));
         if (record != null) {
-            System.out.println("Playing sound: " + record.getDataItem());
+            System.out.println("Playing sound file: " + record.getDataItem());
         } else {
-            System.out.println("There is no sound file for " + label);
+            System.out.println("There is no sound file for " + label + ".");
         }
     }
 
@@ -163,11 +159,11 @@ public class Interface {
             return;
         }
         String label = parts[1].toLowerCase();
-        Record record = dictionary.get(new Key(label, 4)); // type 4 for music
+        Record record = dictionary.get(new Key(label, 4));
         if (record != null) {
-            System.out.println("Playing music: " + record.getDataItem());
+            System.out.println("Playing music file: " + record.getDataItem());
         } else {
-            System.out.println("There is no music file for " + label);
+            System.out.println("There is no music file for " + label + ".");
         }
     }
 
@@ -177,11 +173,11 @@ public class Interface {
             return;
         }
         String label = parts[1].toLowerCase();
-        Record record = dictionary.get(new Key(label, 5)); // type 5 for voice
+        Record record = dictionary.get(new Key(label, 5));
         if (record != null) {
-            System.out.println("Saying voice: " + record.getDataItem());
+            System.out.println("Playing voice file: " + record.getDataItem());
         } else {
-            System.out.println("There is no voice file for " + label);
+            System.out.println("There is no voice file for " + label + ".");
         }
     }
 
@@ -191,11 +187,11 @@ public class Interface {
             return;
         }
         String label = parts[1].toLowerCase();
-        Record record = dictionary.get(new Key(label, 6)); // type 6 for image
+        Record record = dictionary.get(new Key(label, 6));
         if (record != null) {
-            System.out.println("Showing image: " + record.getDataItem());
+            System.out.println("Showing image file: " + record.getDataItem());
         } else {
-            System.out.println("There is no image file for " + label);
+            System.out.println("There is no image file for " + label + ".");
         }
     }
 
@@ -205,11 +201,11 @@ public class Interface {
             return;
         }
         String label = parts[1].toLowerCase();
-        Record record = dictionary.get(new Key(label, 7)); // type 7 for animated image
+        Record record = dictionary.get(new Key(label, 7));
         if (record != null) {
-            System.out.println("Animating image: " + record.getDataItem());
+            System.out.println("Successfully called show with " + record.getDataItem());
         } else {
-            System.out.println("There is no animated image file for " + label);
+            System.out.println("There is no animated image file for " + label + ".");
         }
     }
 
@@ -219,11 +215,11 @@ public class Interface {
             return;
         }
         String label = parts[1].toLowerCase();
-        Record record = dictionary.get(new Key(label, 8)); // type 8 for webpage
+        Record record = dictionary.get(new Key(label, 8));
         if (record != null) {
-            System.out.println("Browsing URL: " + record.getDataItem());
+            System.out.println("Showing webpage: " + record.getDataItem());
         } else {
-            System.out.println("There is no webpage called " + label);
+            System.out.println("There is no webpage called " + label + ".");
         }
     }
 
@@ -243,9 +239,9 @@ public class Interface {
         Key key = new Key(label, type);
         try {
             dictionary.remove(key);
-            System.out.println("Record with key (" + label + ", " + type + ") deleted.");
+            System.out.println("Record with key (" + label + "," + type + ") has been deleted.");
         } catch (DictionaryException e) {
-            System.out.println("No record in the ordered dictionary has key (" + label + ", " + type + ")");
+            System.out.println("No record in the ordered dictionary has key (" + label + "," + type + ").");
         }
     }
 
@@ -266,9 +262,9 @@ public class Interface {
         Record newRecord = new Record(new Key(label, type), data);
         try {
             dictionary.put(newRecord);
-            System.out.println("Record added with key (" + label + ", " + type + ")");
+            System.out.println("Record with key (" + label + "," + type + ") has been added.");
         } catch (DictionaryException e) {
-            System.out.println("A record with the given key (" + label + ", " + type + ") is already in the ordered dictionary");
+            System.out.println("A record with the given key (" + label + "," + type + ") is already in the ordered dictionary.");
         }
     }
 
@@ -279,11 +275,18 @@ public class Interface {
         }
         String prefix = parts[1].toLowerCase();
         Record current = dictionary.smallest();
+        boolean found = false;
         while (current != null) {
             if (current.getKey().getLabel().startsWith(prefix)) {
-                System.out.println(current.getKey().getLabel() + "," + current.getKey().getType() + "," + current.getDataItem());
+                System.out.print(current.getKey().getLabel() + ", ");
+                found = true;
             }
             current = dictionary.successor(current.getKey());
+        }
+        if (!found) {
+            System.out.println("No label attributes in the ordered dictionary start with prefix " + prefix + ".");
+        } else {
+            System.out.println();
         }
     }
 
@@ -292,7 +295,7 @@ public class Interface {
         if (first != null) {
             System.out.println(first.getKey().getLabel() + "," + first.getKey().getType() + "," + first.getDataItem());
         } else {
-            System.out.println("The dictionary is empty.");
+            System.out.println("The ordered dictionary is empty.");
         }
     }
 
@@ -301,8 +304,7 @@ public class Interface {
         if (last != null) {
             System.out.println(last.getKey().getLabel() + "," + last.getKey().getType() + "," + last.getDataItem());
         } else {
-            System.out.println("The dictionary is empty.");
+            System.out.println("The ordered dictionary is empty.");
         }
     }
-
 }
