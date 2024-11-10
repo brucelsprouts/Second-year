@@ -23,16 +23,19 @@ public class Interface {
         // Read input file and populate the dictionary
         while (fileScanner.hasNextLine()) {
             String label = fileScanner.nextLine().toLowerCase();
-            String typeAndData = fileScanner.nextLine();
-            Record record = createRecord(label, typeAndData);
-            if (record != null) {
-                try {
-                    dictionary.put(record);
-                } catch (DictionaryException e) {
-                    System.out.println("Error adding record: " + e.getMessage());
+            if (fileScanner.hasNextLine()) {
+                String typeAndData = fileScanner.nextLine();
+                Record record = createRecord(label, typeAndData);
+                if (record != null) {
+                    try {
+                        dictionary.put(record);
+                    } catch (DictionaryException e) {
+                        System.out.println("Error adding record: " + e.getMessage());
+                    }
                 }
             }
         }
+        fileScanner.close();
 
         // Initialize StringReader to handle commands
         StringReader keyboard = new StringReader();
@@ -41,7 +44,7 @@ public class Interface {
         // Read and process user commands
         while (true) {
             line = keyboard.read("Enter next command: ");
-            String[] parts = line.split(" ", 2);
+            String[] parts = line.trim().split(" ", 2);
             String command = parts[0].toLowerCase();
 
             switch (command) {
@@ -113,6 +116,10 @@ public class Interface {
     }
 
     private static void handleDefine(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 1)); // type 1 for definition
         if (record != null) {
@@ -123,6 +130,10 @@ public class Interface {
     }
 
     private static void handleTranslate(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 2)); // type 2 for translation
         if (record != null) {
@@ -133,6 +144,10 @@ public class Interface {
     }
 
     private static void handleSound(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 3)); // type 3 for sound
         if (record != null) {
@@ -143,6 +158,10 @@ public class Interface {
     }
 
     private static void handlePlay(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 4)); // type 4 for music
         if (record != null) {
@@ -153,6 +172,10 @@ public class Interface {
     }
 
     private static void handleSay(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 5)); // type 5 for voice
         if (record != null) {
@@ -163,6 +186,10 @@ public class Interface {
     }
 
     private static void handleShow(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 6)); // type 6 for image
         if (record != null) {
@@ -173,6 +200,10 @@ public class Interface {
     }
 
     private static void handleAnimate(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 7)); // type 7 for animated image
         if (record != null) {
@@ -183,6 +214,10 @@ public class Interface {
     }
 
     private static void handleBrowse(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 8)); // type 8 for webpage
         if (record != null) {
@@ -193,22 +228,63 @@ public class Interface {
     }
 
     private static void handleDelete(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 3) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
-        int type = Integer.parseInt(parts[2]);
-        dictionary.remove(new Key(label, type));
+        int type;
+        try {
+            type = Integer.parseInt(parts[2]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid type.");
+            return;
+        }
+        Key key = new Key(label, type);
+        try {
+            dictionary.remove(key);
+            System.out.println("Record with key (" + label + ", " + type + ") deleted.");
+        } catch (DictionaryException e) {
+            System.out.println("No record in the ordered dictionary has key (" + label + ", " + type + ")");
+        }
     }
 
     private static void handleAdd(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 4) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String label = parts[1].toLowerCase();
-        int type = Integer.parseInt(parts[2]);
+        int type;
+        try {
+            type = Integer.parseInt(parts[2]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid type.");
+            return;
+        }
         String data = parts[3];
         Record newRecord = new Record(new Key(label, type), data);
-        dictionary.put(newRecord);
+        try {
+            dictionary.put(newRecord);
+            System.out.println("Record added with key (" + label + ", " + type + ")");
+        } catch (DictionaryException e) {
+            System.out.println("A record with the given key (" + label + ", " + type + ") is already in the ordered dictionary");
+        }
     }
 
     private static void handleList(String[] parts, BSTDictionary dictionary) {
+        if (parts.length < 2) {
+            System.out.println("Invalid command.");
+            return;
+        }
         String prefix = parts[1].toLowerCase();
-        dictionary.list(prefix);
+        Record current = dictionary.smallest();
+        while (current != null) {
+            if (current.getKey().getLabel().startsWith(prefix)) {
+                System.out.println(current.getKey().getLabel() + "," + current.getKey().getType() + "," + current.getDataItem());
+            }
+            current = dictionary.successor(current.getKey());
+        }
     }
 
     private static void handleFirst(BSTDictionary dictionary) {
@@ -216,7 +292,7 @@ public class Interface {
         if (first != null) {
             System.out.println(first.getKey().getLabel() + "," + first.getKey().getType() + "," + first.getDataItem());
         } else {
-            System.out.println("No records in the ordered dictionary.");
+            System.out.println("The dictionary is empty.");
         }
     }
 
@@ -225,7 +301,8 @@ public class Interface {
         if (last != null) {
             System.out.println(last.getKey().getLabel() + "," + last.getKey().getType() + "," + last.getDataItem());
         } else {
-            System.out.println("No records in the ordered dictionary.");
+            System.out.println("The dictionary is empty.");
         }
     }
+
 }
