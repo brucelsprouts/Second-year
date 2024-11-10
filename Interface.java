@@ -41,7 +41,7 @@ public class Interface {
 
         while (true) {
             line = keyboard.read("Enter next command: ");
-            String[] parts = line.trim().split(" ", 2);
+            String[] parts = line.trim().split("\\s+", 4);            
             String command = parts[0].toLowerCase();
 
             switch (command) {
@@ -94,10 +94,13 @@ public class Interface {
 
     private static Record createRecord(String label, String typeAndData) {
         int type = determineType(typeAndData);
-        if (type != -1) {
-            return new Record(new Key(label, type), typeAndData.substring(1));
+        String data;
+        if (type == 1 || type == 7) {
+            data = typeAndData;
+        } else {
+            data = typeAndData.substring(1);
         }
-        return null;
+        return new Record(new Key(label, type), data);
     }
 
     private static int determineType(String typeAndData) {
@@ -121,7 +124,7 @@ public class Interface {
         if (record != null) {
             System.out.println(record.getDataItem());
         } else {
-            System.out.println("The word " + label + " is not in the dictionary.");
+            System.out.println("the word " + label + " is not in the dictionary.");
         }
     }
 
@@ -203,7 +206,7 @@ public class Interface {
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 7));
         if (record != null) {
-            System.out.println("Successfully called show with " + record.getDataItem());
+            System.out.println("Succesfully called show with " + record.getDataItem());
         } else {
             System.out.println("There is no animated image file for " + label + ".");
         }
@@ -239,7 +242,6 @@ public class Interface {
         Key key = new Key(label, type);
         try {
             dictionary.remove(key);
-            System.out.println("Record with key (" + label + "," + type + ") has been deleted.");
         } catch (DictionaryException e) {
             System.out.println("No record in the ordered dictionary has key (" + label + "," + type + ").");
         }
@@ -262,7 +264,6 @@ public class Interface {
         Record newRecord = new Record(new Key(label, type), data);
         try {
             dictionary.put(newRecord);
-            System.out.println("Record with key (" + label + "," + type + ") has been added.");
         } catch (DictionaryException e) {
             System.out.println("A record with the given key (" + label + "," + type + ") is already in the ordered dictionary.");
         }
