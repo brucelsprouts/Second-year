@@ -60,101 +60,69 @@ public class BinarySearchTree {
     
     // Deletes the node with the given key from the tree with root r. Throws a DictionaryException if the tree does not store a record with the given key.
     public void remove(BSTNode r, Key k) throws DictionaryException {
-        // Find the node to be removed
-        BSTNode nodeToRemove = findNode(r, k);
-        if (nodeToRemove == null) {
-            throw new DictionaryException("Record with the given key does not exist.");
+        BSTNode target = get(r, k);
+        if (target == null) {
+            throw new DictionaryException("Key not found!");
         }
-
-        // Node to be removed has no children.
-        if (nodeToRemove.isLeaf()) {
-            if (nodeToRemove == r) {        // Tree had only one node.
-                root = null;                
-            } else {                        // Remove the node and update the parent's reference.
-                if (nodeToRemove.getParent().getLeftChild() == nodeToRemove) {
-                    nodeToRemove.getParent().setLeftChild(null);
-                } else {
-                    nodeToRemove.getParent().setRightChild(null);
-                }
-            }
-            return;
+        if (target.isLeaf()) {
+            replaceNode(target, null);
+        } else if (target.getLeftChild() == null) {
+            replaceNode(target, target.getRightChild());
+        } else if (target.getRightChild() == null) {
+            replaceNode(target, target.getLeftChild());
+        } else {
+            BSTNode successor = smallest(target.getRightChild());
+            target.setRecord(successor.getRecord());
+            remove(successor, successor.getRecord().getKey());
         }
+    }
 
-        // Node to be removed has one child
-        if (nodeToRemove.getLeftChild() == null || nodeToRemove.getRightChild() == null) {
-            BSTNode child;
-            if (nodeToRemove.getLeftChild() != null) {
-                child = nodeToRemove.getLeftChild();
-            } else {
-                child = nodeToRemove.getRightChild();
-            }
-            if (nodeToRemove == r) {        // Root node is replaced by its child
-                root = child; 
-            } else {
-                if (nodeToRemove.getParent().getLeftChild() == nodeToRemove) {
-                    nodeToRemove.getParent().setLeftChild(child);
-                } else {
-                    nodeToRemove.getParent().setRightChild(child);
-                }
-                child.setParent(nodeToRemove.getParent());
-            }
-            return;
+    // Helper function to replace nodes
+    private void replaceNode(BSTNode oldNode, BSTNode newNode) {
+        if (oldNode.getParent() == null) {
+            root = newNode;
+        } else if (oldNode == oldNode.getParent().getLeftChild()) {
+            oldNode.getParent().setLeftChild(newNode);
+        } else {
+            oldNode.getParent().setRightChild(newNode);
         }
-
-        // Node to be removed has two children
-        BSTNode successor = successor(r,nodeToRemove.getRecord().getKey());
-        nodeToRemove.setRecord(successor.getRecord());
-        remove(successor, successor.getRecord().getKey());
+        if (newNode != null) {
+            newNode.setParent(oldNode.getParent());
+        }
     }
 
     // Returns the node storing the successor of the given key in the tree with root r; returns null if the successor does not exist.
     public BSTNode successor(BSTNode r, Key k) {
-        BSTNode current = findNode(r, k);       // Find the node with the given key.
-        if (current == null) {
+        BSTNode node = get(r, k);
+        if (node == null) {
             return null;
         }
-    
-        if (current.getRightChild() != null) {  // Check for right subtree.
-            return smallest(current.getRightChild());
+        if (node.getRightChild() != null) {
+            return smallest(node.getRightChild());
         }
-    
-        // Find the lowest ancestor.
-        BSTNode successor = null;
-        BSTNode ancestor = r;
-        while (ancestor != current) {
-            if (k.compareTo(ancestor.getRecord().getKey()) < 0) {
-                successor = ancestor;
-                ancestor = ancestor.getLeftChild();
-            } else {
-                ancestor = ancestor.getRightChild();
-            }
+        BSTNode parent = node.getParent();
+        while (parent != null && node == parent.getRightChild()) {
+            node = parent;
+            parent = parent.getParent();
         }
-        return successor;
+        return parent;
     }
 
     // Returns the node storing the predecessor of the given key in the tree with root r; returns null if the predecessor does not exist.
     public BSTNode predecessor(BSTNode r, Key k) {
-        BSTNode current = findNode(r, k);       // Find the node with the given key.
-        if (current == null) {
+        BSTNode node = get(r, k);
+        if (node == null) {
             return null;
         }
-    
-        if (current.getLeftChild() != null) {  // Check for left subtree.
-            return largest(current.getLeftChild());
+        if (node.getLeftChild() != null) {
+            return largest(node.getLeftChild());
         }
-    
-        // Find the highest ancestor.
-        BSTNode predecessor = null;
-        BSTNode ancestor = r;
-        while (ancestor != current) {
-            if (k.compareTo(ancestor.getRecord().getKey()) > 0) {
-                predecessor = ancestor;
-                ancestor = ancestor.getRightChild();
-            } else {
-                ancestor = ancestor.getLeftChild();
-            }
+        BSTNode parent = node.getParent();
+        while (parent != null && node == parent.getLeftChild()) {
+            node = parent;
+            parent = parent.getParent();
         }
-        return predecessor;
+        return parent;
     }
 
     // Returns the node a node in tree.
