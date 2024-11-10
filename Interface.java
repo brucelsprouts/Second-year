@@ -2,8 +2,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+// Interface class to interact with the user.
 public class Interface {
     public static void main(String[] args) {
+        // Check if the input file is provided.
         if (args.length != 1) {
             System.out.println("Please provide the input file.");
             return;
@@ -12,6 +14,7 @@ public class Interface {
         String inputFile = args[0];
         Scanner fileScanner = null;
         try {
+            // Attempt to open the input file.
             fileScanner = new Scanner(new File(inputFile));
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + inputFile);
@@ -20,8 +23,9 @@ public class Interface {
 
         BSTDictionary dictionary = new BSTDictionary();
 
+        // Read the input file and store records in the dictionary.
         while (fileScanner.hasNextLine()) {
-            String label = fileScanner.nextLine().toLowerCase();
+            String label = fileScanner.nextLine().toLowerCase();        
             if (fileScanner.hasNextLine()) {
                 String typeAndData = fileScanner.nextLine();
                 Record record = createRecord(label, typeAndData);
@@ -31,6 +35,8 @@ public class Interface {
                     } catch (DictionaryException e) {
                         System.out.println("A record with the given key (" + label + "," + determineType(typeAndData) + ") is already in the ordered dictionary.");
                     }
+                } else {
+                    System.out.println("Invalid record.");
                 }
             }
         }
@@ -39,6 +45,7 @@ public class Interface {
         StringReader keyboard = new StringReader();
         String line;
 
+        // Loop to process user commands.
         while (true) {
             line = keyboard.read("Enter next command: ");
             String[] parts = line.trim().split("\\s+", 4);            
@@ -92,6 +99,7 @@ public class Interface {
         }
     }
 
+    // Create a record based on label and typeAndData.
     private static Record createRecord(String label, String typeAndData) {
         int type = determineType(typeAndData);
         String data;
@@ -103,6 +111,7 @@ public class Interface {
         return new Record(new Key(label, type), data);
     }
 
+    // Determine the type of the record based on typeAndData.
     private static int determineType(String typeAndData) {
         if (typeAndData.startsWith("-")) return 3;
         if (typeAndData.startsWith("+")) return 4;
@@ -114,6 +123,7 @@ public class Interface {
         return 1;
     }
 
+    // Handle the 'define' command.
     private static void handleDefine(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -124,10 +134,11 @@ public class Interface {
         if (record != null) {
             System.out.println(record.getDataItem());
         } else {
-            System.out.println("the word " + label + " is not in the dictionary.");
+            System.out.println("The word " + label + " is not in the dictionary");
         }
     }
 
+    // Handle the 'translate' command.
     private static void handleTranslate(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -142,6 +153,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'sound' command.
     private static void handleSound(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -156,6 +168,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'play' command.
     private static void handlePlay(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -170,6 +183,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'say' command.
     private static void handleSay(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -184,6 +198,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'show' command.
     private static void handleShow(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -198,6 +213,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'animate' command.
     private static void handleAnimate(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -212,6 +228,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'browse' command.
     private static void handleBrowse(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -226,6 +243,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'delete' command.
     private static void handleDelete(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 3) {
             System.out.println("Invalid command.");
@@ -247,6 +265,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'add' command.
     private static void handleAdd(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 4) {
             System.out.println("Invalid command.");
@@ -269,6 +288,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'list' command.
     private static void handleList(String[] parts, BSTDictionary dictionary) {
         if (parts.length < 2) {
             System.out.println("Invalid command.");
@@ -291,6 +311,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'first' command.
     private static void handleFirst(BSTDictionary dictionary) {
         Record first = dictionary.smallest();
         if (first != null) {
@@ -300,6 +321,7 @@ public class Interface {
         }
     }
 
+    // Handle the 'last' command.
     private static void handleLast(BSTDictionary dictionary) {
         Record last = dictionary.largest();
         if (last != null) {

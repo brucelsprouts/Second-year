@@ -1,7 +1,7 @@
 // Represents a binary search tree
 public class BinarySearchTree {
     private BSTNode root;               // Root of the binary search tree.
-
+    
     // Constructor that creates a leaf node as root of tree.
     public BinarySearchTree() {
         this.root = null;
