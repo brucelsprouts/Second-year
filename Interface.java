@@ -111,7 +111,7 @@ public class Interface {
     private static Record createRecord(String label, String typeAndData) {
         int type = determineType(typeAndData);
         String data;
-        if (type == 1 || type == 7 || type == 6 || type == 8) {
+        if (type == 1 || type == 6 || type == 7 || type == 8) {
             data = typeAndData;
         } else {
             data = typeAndData.substring(1);
