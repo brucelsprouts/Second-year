@@ -57,11 +57,10 @@ public class BinarySearchTree {
             }
         }
     }
-    
+
     // Deletes the node with the given key from the tree with root r. Throws a DictionaryException if the tree does not store a record with the given key.
     public void remove(BSTNode r, Key k) throws DictionaryException {
-        // Find the node to be removed
-        BSTNode nodeToRemove = get(r, k);
+        BSTNode nodeToRemove = get(r, k);        // Find the node to be removed
         if (nodeToRemove == null) {
             throw new DictionaryException("Record with the given key does not exist.");
         }
@@ -79,7 +78,6 @@ public class BinarySearchTree {
             }
             return;
         }
-
         // Node to be removed has one child
         if (nodeToRemove.getLeftChild() == null || nodeToRemove.getRightChild() == null) {
             BSTNode child;
@@ -104,7 +102,16 @@ public class BinarySearchTree {
         // Node to be removed has two children
         BSTNode successor = successor(r,nodeToRemove.getRecord().getKey());
         nodeToRemove.setRecord(successor.getRecord());
-        remove(successor, successor.getRecord().getKey());
+
+        // Remove the successor node
+        if (successor.getParent().getLeftChild() == successor) {
+            successor.getParent().setLeftChild(successor.getRightChild());
+        } else {
+            successor.getParent().setRightChild(successor.getRightChild());
+        }
+        if (successor.getRightChild() != null) {
+            successor.getRightChild().setParent(successor.getParent());
+        }
     }
 
     // Returns the node storing the successor of the given key in the tree with root r; returns null if the successor does not exist.
