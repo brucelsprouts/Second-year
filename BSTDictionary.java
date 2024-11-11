@@ -1,6 +1,6 @@
 // Implements the BSTDictionaryADT interface
 public class BSTDictionary implements BSTDictionaryADT {
-    private BinarySearchTree bst;
+    private BinarySearchTree bst;   // Binary search tree to store records.
 
     // Constructor
     public BSTDictionary() {

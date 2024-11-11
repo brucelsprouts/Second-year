@@ -1,6 +1,8 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.FileReader;
+import java.io.IOException;
 
 // Interface class to interact with the user.
 public class Interface {
@@ -12,10 +14,10 @@ public class Interface {
         }
 
         String inputFile = args[0];
-        Scanner fileScanner = null;
+        BufferedReader fileReader = null;
         try {
             // Attempt to open the input file.
-            fileScanner = new Scanner(new File(inputFile));
+            fileReader = new BufferedReader(new FileReader(new File(inputFile)));
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + inputFile);
             return;
@@ -24,23 +26,28 @@ public class Interface {
         BSTDictionary dictionary = new BSTDictionary();
 
         // Read the input file and store records in the dictionary.
-        while (fileScanner.hasNextLine()) {
-            String label = fileScanner.nextLine().toLowerCase();        
-            if (fileScanner.hasNextLine()) {
-                String typeAndData = fileScanner.nextLine();
-                Record record = createRecord(label, typeAndData);
-                if (record != null) {
-                    try {
-                        dictionary.put(record);
-                    } catch (DictionaryException e) {
-                        System.out.println("A record with the given key (" + label + "," + determineType(typeAndData) + ") is already in the ordered dictionary.");
+        try {
+            String label;
+            while ((label = fileReader.readLine()) != null) {
+                label = label.toLowerCase();
+                String typeAndData = fileReader.readLine();
+                if (typeAndData != null) {
+                    Record record = createRecord(label, typeAndData);
+                    if (record != null) {
+                        try {
+                            dictionary.put(record);
+                        } catch (DictionaryException e) {
+                            System.out.println("A record with the given key (" + label + "," + determineType(typeAndData) + ") is already in the ordered dictionary.");
+                        }
+                    } else {
+                        System.out.println("Invalid record.");
                     }
-                } else {
-                    System.out.println("Invalid record.");
                 }
             }
+            fileReader.close();
+        } catch (IOException e) {
+            System.out.println("Error reading the file: " + inputFile);
         }
-        fileScanner.close();
 
         StringReader keyboard = new StringReader();
         String line;

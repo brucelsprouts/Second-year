@@ -78,6 +78,7 @@ public class BinarySearchTree {
             }
             return;
         }
+        
         // Node to be removed has one child
         if (nodeToRemove.getLeftChild() == null || nodeToRemove.getRightChild() == null) {
             BSTNode child;
