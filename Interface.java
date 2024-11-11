@@ -15,6 +15,7 @@ public class Interface {
 
         String inputFile = args[0];
         BufferedReader fileReader = null;
+
         try {
             // Attempt to open the input file.
             fileReader = new BufferedReader(new FileReader(new File(inputFile)));
@@ -110,7 +111,7 @@ public class Interface {
     private static Record createRecord(String label, String typeAndData) {
         int type = determineType(typeAndData);
         String data;
-        if (type == 1 || type == 7) {
+        if (type == 1 || type == 7 || type == 6 || type == 8) {
             data = typeAndData;
         } else {
             data = typeAndData.substring(1);
@@ -132,12 +133,15 @@ public class Interface {
 
     // Handle the 'define' command.
     private static void handleDefine(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 1));
+        
         if (record != null) {
             System.out.println(record.getDataItem());
         } else {
@@ -147,12 +151,15 @@ public class Interface {
 
     // Handle the 'translate' command.
     private static void handleTranslate(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid. 
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 2));
+
         if (record != null) {
             System.out.println(record.getDataItem());
         } else {
@@ -162,12 +169,15 @@ public class Interface {
 
     // Handle the 'sound' command.
     private static void handleSound(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 3));
+
         if (record != null) {
             System.out.println("Playing sound file: " + record.getDataItem());
         } else {
@@ -177,12 +187,15 @@ public class Interface {
 
     // Handle the 'play' command.
     private static void handlePlay(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 4));
+
         if (record != null) {
             System.out.println("Playing music file: " + record.getDataItem());
         } else {
@@ -192,12 +205,15 @@ public class Interface {
 
     // Handle the 'say' command.
     private static void handleSay(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 5));
+
         if (record != null) {
             System.out.println("Playing voice file: " + record.getDataItem());
         } else {
@@ -207,12 +223,15 @@ public class Interface {
 
     // Handle the 'show' command.
     private static void handleShow(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 6));
+
         if (record != null) {
             System.out.println("Showing image file: " + record.getDataItem());
         } else {
@@ -222,12 +241,15 @@ public class Interface {
 
     // Handle the 'animate' command.
     private static void handleAnimate(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 7));
+
         if (record != null) {
             System.out.println("Succesfully called show with " + record.getDataItem());
         } else {
@@ -237,12 +259,15 @@ public class Interface {
 
     // Handle the 'browse' command.
     private static void handleBrowse(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         Record record = dictionary.get(new Key(label, 8));
+
         if (record != null) {
             System.out.println("Showing webpage: " + record.getDataItem());
         } else {
@@ -252,12 +277,16 @@ public class Interface {
 
     // Handle the 'delete' command.
     private static void handleDelete(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 3) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         int type;
+
+        // Check if the type is valid then removes it.
         try {
             type = Integer.parseInt(parts[2]);
         } catch (NumberFormatException e) {
@@ -274,12 +303,16 @@ public class Interface {
 
     // Handle the 'add' command.
     private static void handleAdd(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 4) {
             System.out.println("Invalid command.");
             return;
         }
+
         String label = parts[1].toLowerCase();
         int type;
+
+        // Check if the type is valid then adds it.
         try {
             type = Integer.parseInt(parts[2]);
         } catch (NumberFormatException e) {
@@ -297,13 +330,17 @@ public class Interface {
 
     // Handle the 'list' command.
     private static void handleList(String[] parts, BSTDictionary dictionary) {
+        // Check if the command is valid.
         if (parts.length < 2) {
             System.out.println("Invalid command.");
             return;
         }
+
         String prefix = parts[1].toLowerCase();
         Record current = dictionary.smallest();
         boolean found = false;
+
+        // Iterate through dictionary and print labels starting with the given prefix.
         while (current != null) {
             if (current.getKey().getLabel().startsWith(prefix)) {
                 System.out.print(current.getKey().getLabel() + ", ");
@@ -320,6 +357,7 @@ public class Interface {
 
     // Handle the 'first' command.
     private static void handleFirst(BSTDictionary dictionary) {
+        // Get the smallest record in the dictionary.
         Record first = dictionary.smallest();
         if (first != null) {
             System.out.println(first.getKey().getLabel() + "," + first.getKey().getType() + "," + first.getDataItem());
@@ -330,6 +368,7 @@ public class Interface {
 
     // Handle the 'last' command.
     private static void handleLast(BSTDictionary dictionary) {
+        // Get the largest record in the dictionary.
         Record last = dictionary.largest();
         if (last != null) {
             System.out.println(last.getKey().getLabel() + "," + last.getKey().getType() + "," + last.getDataItem());
