@@ -6,8 +6,8 @@ import java.util.Map;
 
 // This class represents an undirected graph
 public class Graph implements GraphADT {
-    private Map<Integer, List<GraphEdge>> adjacencyList; // Maps node IDs to lists of edges
-    private Map<Integer, GraphNode> nodes; // Maps node IDs to GraphNode instances
+    private Map<Integer, List<GraphEdge>> adjacencyList;    // Maps node IDs to lists of edges
+    private Map<Integer, GraphNode> nodes;                  // Maps node IDs to GraphNode instances
 
     // Creates an empty graph with n nodes and no edge
     public Graph(int n) {
@@ -27,7 +27,7 @@ public class Graph implements GraphADT {
             throw new GraphException("One or both nodes do not exist.");
         }
 
-        // Check if the edge already exists
+        // Check if the edge exists
         for (GraphEdge edge : adjacencyList.get(u.getName())) {
             if (edge.secondEndpoint().equals(v)) {
                 throw new GraphException("Edge already exists between these nodes.");
@@ -62,15 +62,16 @@ public class Graph implements GraphADT {
     @Override
     public GraphEdge getEdge(GraphNode u, GraphNode v) throws GraphException {
         if (!adjacencyList.containsKey(u.getName()) || !adjacencyList.containsKey(v.getName())) {
-            throw new GraphException("One or both nodes do not exist.");
+            throw new GraphException("One or both nodes dont exist.");
         }
 
+        // Check if the edge exists
         for (GraphEdge edge : adjacencyList.get(u.getName())) {
             if (edge.secondEndpoint().equals(v)) {
                 return edge;
             }
         }
-        throw new GraphException("Edge does not exist between the specified nodes.");
+        throw new GraphException("Edge doesnt exist between the specified nodes.");
     }
 
     // Returns true if nodes u and v are adjacent; returns false otherwise
@@ -80,6 +81,7 @@ public class Graph implements GraphADT {
             throw new GraphException("One or both nodes do not exist.");
         }
 
+        // Check if the edge exists
         for (GraphEdge edge : adjacencyList.get(u.getName())) {
             if (edge.secondEndpoint().equals(v)) {
                 return true;
